@@ -8,16 +8,16 @@ const int PIN_sprinkler = 11;
 const int PIN_alarm = 12;
 
 // WiFi
-const char *ssid = "JAYAS";        // WiFi name
-const char *password = "8806123K"; // password
+const char *ssid = "ssid";         // WiFi name
+const char *password = "password"; // password
 
 // MQTT Broker
-const char *mqtt_broker = "52.184.165.84";
-const char *topic_alarm = "326project/smartbuilding/pv/<floorno>/<roomno>/current";
-const char *topic_sprinkler = "326project/smartbuilding/pv/<floorno>/<roomno>/current";
-const char *topic_lighting = "326project/smartbuilding/pv/<floorno>/<roomno>/current";
-const char *mqtt_username = "co326a";
-const char *mqtt_password = "safety";
+const char *mqtt_broker = "";
+const char *topic_alarm = "";
+const char *topic_sprinkler = "";
+const char *topic_lighting = "";
+const char *mqtt_username = "";
+const char *mqtt_password = "";
 const int mqtt_port = 1883;
 
 WiFiClient espClient;
