@@ -1,5 +1,4 @@
 #include <PubSubClient.h>
 
-class state;
-state parse(char *message);
-void controller(PubSubClient, char *, state, float);
+int parse(char *message);
+void controller(char *message, int state, char *topic);

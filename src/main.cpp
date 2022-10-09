@@ -3,10 +3,9 @@
 #include <PubSubClient.h>
 #include "util.h"
 
-#define PIN_Light A0
-#define PIN_sprinker A1
-#define PIN_alarm A2
-#define THRESHOLD 200
+const int PIN_lighting = 10;
+const int PIN_sprinkler = 11;
+const int PIN_alarm = 12;
 
 // WiFi
 const char *ssid = "JAYAS";        // WiFi name
@@ -14,7 +13,9 @@ const char *password = "8806123K"; // password
 
 // MQTT Broker
 const char *mqtt_broker = "52.184.165.84";
-const char *topic = "326project/smartbuilding/pv/<floorno>/<roomno>/current";
+const char *topic_alarm = "326project/smartbuilding/pv/<floorno>/<roomno>/current";
+const char *topic_sprinkler = "326project/smartbuilding/pv/<floorno>/<roomno>/current";
+const char *topic_lighting = "326project/smartbuilding/pv/<floorno>/<roomno>/current";
 const char *mqtt_username = "co326a";
 const char *mqtt_password = "safety";
 const int mqtt_port = 1883;
@@ -39,11 +40,14 @@ void callback(char *topic, byte *payload, unsigned int length)
   Serial.println();
   Serial.println("-----------------------");
 
-  controller(client, topic, parse(message), THRESHOLD);
+  controller(message, parse(message), topic);
 }
 
 void setup()
 {
+  pinMode(PIN_lighting, OUTPUT);
+  pinMode(PIN_sprinkler, OUTPUT);
+  pinMode(PIN_alarm, OUTPUT);
 
   // Set software serial baud to 115200;
   Serial.begin(115200);
@@ -85,8 +89,12 @@ void setup()
   }
 
   // publish and subscribe
-  client.publish(topic, "status: ON");
-  client.subscribe(topic);
+  client.publish(topic_alarm, "status: ON");
+  client.publish(topic_sprinkler, "status: ON");
+  client.publish(topic_lighting, "status: ON");
+  client.subscribe(topic_alarm);
+  client.subscribe(topic_sprinkler);
+  client.subscribe(topic_lighting);
 }
 
 void loop()

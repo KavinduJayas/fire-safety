@@ -1,27 +1,65 @@
 
 #include <PubSubClient.h>
+#include <ArduinoJson.h>
 
-class state
-{
-public:
-    bool fire_detect;
-    float smoke_detect;
-    bool pull;
-};
+extern const int PIN_lighting;
+extern const int PIN_sprinkler;
+extern const int PIN_alarm;
+extern const char *topic_alarm;
+extern const char *topic_sprinkler;
+extern const char *topic_lighting;
 
-state parse(char *message)
+int parse(char *message)
 {
+    StaticJsonDocument<200> doc;
+    // Deserialize the JSON document
+    DeserializationError error = deserializeJson(doc, message);
+
+    // Test if parsing succeeds.
+    if (error)
+    {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(error.f_str());
+        return;
+    }
+
+    const int *state = doc["state"];
+    return *state;
 }
 
-void controller(PubSubClient client, char *topic, state state, float threshold)
+void controller(char *topic, int state, char *message)
 {
-    if (state.fire_detect || state.pull)
+    if (strcmp(topic, topic_alarm) == 0)
     {
-        client.publish(topic, "{ sprikler: True }");
+        if (parse(message))
+        {
+            digitalWrite(PIN_alarm, HIGH);
+        }
+        else
+        {
+            digitalWrite(PIN_alarm, LOW);
+        }
     }
-    if (state.smoke_detect > threshold || state.fire_detect || state.pull)
+    if (strcmp(topic, topic_sprinkler) == 0)
     {
-        client.publish(topic, "{ HVAC: vent, Lighting: Evac }");
-        client.publish(topic, "{ Alarm: true }");
+        if (parse(message))
+        {
+            digitalWrite(PIN_alarm, HIGH);
+        }
+        else
+        {
+            digitalWrite(PIN_alarm, LOW);
+        }
+    }
+    if (strcmp(topic, topic_lighting) == 0)
+    {
+        if (parse(message))
+        {
+            digitalWrite(PIN_alarm, HIGH);
+        }
+        else
+        {
+            digitalWrite(PIN_alarm, LOW);
+        }
     }
 }
