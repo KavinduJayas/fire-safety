@@ -3,15 +3,18 @@
 #include <PubSubClient.h>
 #include "util.h"
 
-extern const int PIN_lighting = 10;
+extern const int PIN_lighting1 = 10;
+extern const int PIN_lighting2 = 10;
 extern const int PIN_sprinkler = 11;
 extern const int PIN_alarm = 12;
-const char *topic_alarm = "326project/smartbuilding/safety/<floorno>/<roomno>/firealarm";
-const char *topic_sprinkler = "326project/smartbuilding/safety/<floorno>/<roomno>/sprinkler";
-const char *topic_lighting = "326project/smartbuilding/safety/<floorno>/<roomno>/lighting";
+const char *topic_alarm = "326project/smartbuilding/safety/floor0/room0/control/fire_alarm";
+const char *topic_sprinkler = "326project/smartbuilding/safety/floor0/room0/control/sprinkler";
+const char *topic_lighting1 = "326project/smartbuilding/safety/floor0/room0/control/exit_light";
+const char *topic_lighting2 = "326project/smartbuilding/safety/floor0/room8/control/exit_light";
+
 // WiFi
-const char *ssid = "EngStudent_NEW"; // WiFi name
-const char *password = "3nG5tuDt";   // password
+const char *ssid = "Eng-Student";  // WiFi name
+const char *password = "3nG5tuDt"; // password
 
 // MQTT Broker
 const char *mqtt_broker = "10.40.18.10";
@@ -44,7 +47,8 @@ void callback(char *topic, byte *payload, unsigned int length)
 
 void setup()
 {
-  pinMode(PIN_lighting, OUTPUT);
+  pinMode(PIN_lighting1, OUTPUT);
+  pinMode(PIN_lighting2, OUTPUT);
   pinMode(PIN_sprinkler, OUTPUT);
   pinMode(PIN_alarm, OUTPUT);
 
@@ -88,12 +92,14 @@ void setup()
   }
 
   // publish and subscribe
-  client.publish(topic_alarm, "status: ON");
-  client.publish(topic_sprinkler, "status: ON");
-  client.publish(topic_lighting, "status: ON");
+  // client.publish(topic_alarm, "status: ON");
+  // client.publish(topic_sprinkler, "status: ON");
+  // client.publish(topic_lighting1, "status: ON");
+  // client.publish(topic_lighting2, "status: ON");
   client.subscribe(topic_alarm);
   client.subscribe(topic_sprinkler);
-  client.subscribe(topic_lighting);
+  client.subscribe(topic_lighting1);
+  client.subscribe(topic_lighting2);
 }
 
 void loop()
